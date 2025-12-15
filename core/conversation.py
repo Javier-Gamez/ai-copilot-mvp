@@ -16,7 +16,7 @@ class ConversationSession:
         # 1. Rúbrica: Límite aproximado de turnos y mensaje de cierre.
         if self.turn_count >= self.max_turns:
             return {
-                "content": "⚠️ Has alcanzado el límite de mensajes por sesión (Demo). Por favor, reinicia el chat.",
+                "content": "Has alcanzado el límite de mensajes por sesión (Demo). Por favor, reinicia el chat.",
                 "latency": 0,
                 "tokens_in": 0,
                 "tokens_out": 0,

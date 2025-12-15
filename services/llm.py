@@ -15,16 +15,16 @@ from tenacity import (
 # Cargar variables de entorno
 load_dotenv()
 
-# Configuración de Logging (importante para "trazabilidad" en la rúbrica)
+# Configuración de Logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configuración por defecto (Rúbrica: Control explícito de parámetros)
+# Configuración por defecto par el Control explícito de parámetros
 DEFAULT_PARAMS = {
     "temperature": 0.7,
     "max_tokens": 512,
     "top_p": 1.0,
-    "seed": 42,  # Rúbrica: seed para reproducibilidad
+    "seed": 42,
     "model": os.getenv("MODEL_NAME", "llama3-8b-8192")
 }
 
@@ -37,8 +37,8 @@ class LLMService:
         # Inicializamos el cliente
         self.client = Groq(api_key=self.api_key)
 
-    # Rúbrica: Timeout <= 12s, 2 reintentos (3 intentos totales), Backoff exponencial
-    # Rúbrica: Manejo diferenciado de errores (retrying solo en conexión/rate limit/5xx)
+    #Timeout <= 12s, 2 reintentos (3 intentos totales), Backoff exponencial
+    #Manejo diferenciado de errores (retrying solo en conexión/rate limit/5xx)
     @retry(
         stop=stop_after_attempt(3),  # 1 intento inicial + 2 reintentos
         wait=wait_exponential(multiplier=1, min=2, max=10),
@@ -93,7 +93,7 @@ class LLMService:
             }
 
         except APIStatusError as e:
-            # Rúbrica: Diferencia entre 400 y 500
+            #Diferencia entre 400 y 500
             # Si es 4xx (ej. 400 Bad Request, 401 Unauthorized), NO reintentamos (ya pasó el retry filter o no aplicaba)
             logger.error(f"Error 4xx/5xx fatal del LLM: {e.status_code} - {e.message}")
             return self._fallback_response(error_msg=f"Error del proveedor: {e.status_code}")
@@ -109,7 +109,7 @@ class LLMService:
         """
         return {
             "success": False,
-            "content": "⚠️ Lo siento, mis sistemas neuronales están sobrecargados en este momento. Por favor, intenta de nuevo en unos segundos. (Modo Fallback)",
+            "content": "Lo siento, mis sistemas neuronales están sobrecargados en este momento. Por favor, intenta de nuevo en unos segundos. (Modo Fallback)",
             "latency": 0.0,
             "tokens_in": 0,
             "tokens_out": 0,

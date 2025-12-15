@@ -13,10 +13,9 @@ sys.path.append(parent_dir)
 
 from core.conversation import ConversationSession
 
-# Configuración de la página (Debe ser la primera instrucción de Streamlit)
+# Configuración de la página
 st.set_page_config(
     page_title="AI Copilot MVP",
-    page_icon="🤖",
     layout="wide"
 )
 
@@ -34,11 +33,11 @@ if "last_metrics" not in st.session_state:
 
 # --- 2. Barra Lateral (Sidebar) - Métricas y Control ---
 with st.sidebar:
-    st.title("⚙️ Panel de Control")
+    st.title("Panel de Control")
     st.markdown("---")
     
     # Métricas de la última interacción (Rúbrica: Medición de latencia y tokens)
-    st.subheader("📊 Métricas (Último Turno)")
+    st.subheader("Métricas (Último Turno)")
     col1, col2 = st.columns(2)
     with col1:
         st.metric("Latencia", f"{st.session_state.last_metrics['latency']}s")
@@ -52,11 +51,11 @@ with st.sidebar:
     # Control de Límites (Rúbrica: Límite de turnos)
     turns = st.session_state.chat_session.turn_count
     max_turns = st.session_state.chat_session.max_turns
-    st.subheader(f"🔄 Turnos: {turns}/{max_turns}")
+    st.subheader(f"Turnos: {turns}/{max_turns}")
     st.progress(min(turns / max_turns, 1.0))
     
     if turns >= max_turns:
-        st.warning("⚠️ Límite de sesión alcanzado.")
+        st.warning("Límite de sesión alcanzado.")
     
     st.markdown("---")
     
@@ -76,13 +75,13 @@ with st.sidebar:
     )
 
 # --- 3. Interfaz Principal de Chat ---
-st.title("🤖 AI Copilot MVP")
+st.title("AI Copilot MVP")
 st.caption("Asistente inteligente con Llama 3.3 vía Groq")
 
 # Mostrar historial de mensajes (Renderizado)
 for msg in st.session_state.chat_session.history:
     # Convertimos roles internos a visuales (assistant -> ai)
-    avatar = "👤" if msg["role"] == "user" else "🤖"
+    avatar = "👤" if msg["role"] == "user" else " "
     with st.chat_message(msg["role"], avatar=avatar):
         st.markdown(msg["content"])
 
@@ -114,7 +113,4 @@ if prompt := st.chat_input("Escribe tu mensaje o comando..."):
             "tokens_in": response_data["tokens_in"],
             "tokens_out": response_data["tokens_out"]
         }
-        
-        # Forzar actualización de la sidebar sin recargar toda la página
-        # (Truco: Streamlit actualiza al terminar el script, pero a veces queremos inmediatez)
         # En este caso, al siguiente ciclo de interacción se verán actualizadas.
