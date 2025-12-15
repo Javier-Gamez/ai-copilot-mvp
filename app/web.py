@@ -60,7 +60,7 @@ with st.sidebar:
     st.markdown("---")
     
     # Botón de Reinicio
-    if st.button("🗑️ Reiniciar Conversación", type="primary"):
+    if st.button("Reiniciar Conversación", type="primary"):
         st.session_state.chat_session.reset()
         st.session_state.last_metrics = {"latency": 0.0, "tokens_in": 0, "tokens_out": 0}
         st.rerun()
@@ -81,7 +81,7 @@ st.caption("Asistente inteligente con Llama 3.3 vía Groq")
 # Mostrar historial de mensajes (Renderizado)
 for msg in st.session_state.chat_session.history:
     # Convertimos roles internos a visuales (assistant -> ai)
-    avatar = "👤" if msg["role"] == "user" else " "
+    avatar = "👤" if msg["role"] == "user" else "🤖"
     with st.chat_message(msg["role"], avatar=avatar):
         st.markdown(msg["content"])
 
